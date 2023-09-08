@@ -1,0 +1,141 @@
+<style>
+    .huge{
+        font-size: 40px;
+    }
+</style>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+    <h1 class="h4 mb-0"><i class="fab fa-discord"></i> Discord</h1>
+</div>
+<div class="row">
+    <div class="d-flex">
+
+    </div>
+</div>
+
+<% if(publicData){ %>
+<!--
+<span class="row">
+    <img class="rounded-circle"src="https://image.eveonline.com/Character/<%=esiid%>_128.jpg" alt="<%=publicData.corporation_name%>" style="width: 128pt;height: 128pt;">
+    <ul class="list-group list-group-flush col-sm">
+        <li class="list-group-item"><%=publicData.name%></li>
+        <li class="list-group-item">꼽 : <a target="_blank" href="https://evewho.com/corp/<%=publicData.corporation_name.replace(/(\s)/gi,"+")%>">[<%=publicData.corporation_ticker%>]<%=publicData.corporation_name%></a></li> 
+        <li class="list-group-item">캐릭터 생성일 : <%=publicData.birthday%></li>
+        <li class="list-group-item">시큐리티 : <%= publicData.security_status %></li>
+        <li class="list-group-item">소지금 : <%= WalletBalance %> isk</li>
+    </ul>
+</span>
+-->
+<div class="row">
+    <img class="rounded-circle" src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.discord.user.avatar %>?size=1024" alt="discord_img" style="width: 5rem;height: 5rem;"  onerror="this.src='/image/wtf128.png'">
+    <div class="ml-2">
+        <h1 class="h5"><%= user.name %></h1>
+        <h1 class="h6"><%= user.discord.user.username %>(#<%= user.discord.user.discriminator %>)</h1>
+    </div>
+</div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+    <h1 class="h4 mb-0"><i class="fas fa-id-badge"></i> PublicData</h1><i class="fas fa-sync-alt"></i>
+</div>
+<div class="row">
+    <img class="rounded-circle" src="https://image.eveonline.com/Character/<%=esiid%>_128.jpg" alt="discord_img" style="width: 5rem;height: 5rem;"  onerror="this.src='../../image/wtf128.png'">
+    <div class="ml-2">
+        <h1 class="h5"><%=publicData.name%></h1>
+        <h1 class="h6"><a target="_blank" href="https://evewho.com/corp/<%=publicData.corporation_name.replace(/(\s)/gi,"+")%>">[<%=publicData.corporation_ticker%>]<%=publicData.corporation_name%></a></h1>
+        <h1 class="h6">Security : <%= publicData.security_status %></h1>
+        <h1 class="h6">BirthDay : <%=publicData.birthday%></h1>
+    </div>
+</div>
+
+<% } else{%>
+    퍼블릭 데이터가 존재하지 않음!
+<% } %>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+    <h1 class="h4 mb-0"><i class="fas fa-book"></i> SkillQueue</h1><i class="fas fa-sync-alt"></i>
+</div>
+<div class="content_div">
+    <% if(skillQueue){ %>
+        <table border="0" class="table table-sm">
+            <thead>
+            <tr>
+                <td class="font-weight-bold">#</td>
+                <td class="font-weight-bold">skill_id</td>
+                <td class="font-weight-bold">skill_name</td>
+                <td class="font-weight-bold">finish_date</td>
+                <td class="font-weight-bold">remaining_date</td>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(var i=0; i < skillQueue.length; i++){%>
+            <tr>
+                <td class="font-weight-bold"><%=i+1%></td>
+                <td><%=skillQueue[i].skill_id%></td>
+                <td><%=skillQueue[i].skill_name%> <%=skillQueue[i].finished_level%></td>
+                <td><%=skillQueue[i].finish_date%></td>
+                <td><%=skillQueue[i].remaining_date%></td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+        <% } else{%>
+            스킬큐 데이터가 존재하지 않음!
+        <% } %>
+</div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+    <h1 class="h4 mb-0"><i class="fas fa-book"></i> Skills</h1> <a href="./updateCharSkill/"><i class="fas fa-sync-alt"></i></a>
+</div>
+<div class="content_div">
+	<% if(skillchart){%>
+  <!--Chart Placement[2]-->
+  	<div id="zc"></div>
+  	<script>
+		var wdata = <%-JSON.stringify(skillchart)%>
+
+		var cdata = {
+			"border-width":1,
+			"border-color":"#000",
+			"background-color":"#fff",
+			"graphset":[
+				{
+					"title":{
+						"text":"<%=publicData.name%>'s Skills"
+					},
+					"type":"sunburst",
+					"plotarea":{
+						"margin":'40 0 0 0'
+					},
+					"options":{
+					},
+					"tooltip":{
+						"align":"left",
+						"thousands-separator":","
+					},
+					"scale-r":{
+						"-ref-angle":180,
+						"-aperture":180
+					},
+					"plot":{
+						"tooltip-text":"<span style='font-size:19px'>%plot-text</span><br/>Total: %node-value",
+						"value-box":{
+							"visible":null,
+							"font-size":10,
+							"text":"%data-vbtext"
+						}
+					},
+					"series":wdata
+				}
+			]
+	};
+	
+	zingchart.render({
+	id : 'zc',
+	width : 600,
+		height : 600,
+		output : 'svg',
+		data : cdata
+	});
+	</script>
+	<%}else{%>
+	<div>
+		<h1 style="text-align: center"class="mt-5 ml-5">SkillData not found plz refresh data</h1>
+	</div>
+	<%}%>
+</div>

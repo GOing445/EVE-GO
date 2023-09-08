@@ -1,0 +1,71 @@
+<div class="card py-1" style="width: 100%;">
+    <div class="row no-gutters">
+        <img src="<%=doctrine.CoverImg%>"  style="width: 10rem;height: 10rem;" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h4 class="card-title" style="font-family:'Malgun Gothic';"><b><%=doctrine.Name%></b></h4>
+            <h5 class="card-text"><b><%=doctrine.SubTitle%></b></h5>
+            <p class="card-text"><%-doctrine.Desc.replace(/(\n|\r\n)/g, '<br>')%></p>
+            
+        <%if(sess.data.isAdmin==true){%>
+          <div class="btn-group">
+            <a href="/doctrine/editDoctrine/<%=doctrine.Doctrine_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+            <a href="/doctrine/addRole/<%=doctrine.Doctrine_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">AddRole</button></a>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/doctrine/deleteDoctrine/<%=doctrine.Doctrine_ID%>','이 독트린을 제외하시겟습니까?')">Delete</button>
+          </div>
+        <%}%>
+        </div>
+    </div>
+    <br><br>
+    <% for(RoleGroup of RoleGroups) {%>
+      <h3><%= RoleGroup.Name %> <span class="h6"><%= RoleGroup.Desc %></span></h3>
+         <%if(sess.data.isAdmin==true){%>
+        <div class="btn-group">
+          <a href="/doctrine/link/<%=doctrine.Doctrine_ID%>/<%=RoleGroup.Role_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">LinkFit</button></a>
+          <a href="/doctrine/editRole/<%=doctrine.Doctrine_ID%>/<%=RoleGroup.Role_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">EditRole</button></a>
+          <button type="button" class="btn btn-sm btn-outline-secondary"  onclick="href_confirm('/doctrine/deleteRole/<%=doctrine.Doctrine_ID%>/<%=RoleGroup.Role_ID%>','역활을 삭제하시겟습니까?')">DeleteRole</button>
+        </div><%}%>
+      <div class="album py-2 bg-light">
+          <div class="container">
+            <div class="d-inline-flex flex-wrap">
+      
+        <%for(i in RoleGroup.Fits){%>
+          <er id="fitBody_<%=RoleGroup.Role_ID%>_<%=i%>" style="display:none"><%-RoleGroup.Fits[i].Body.replace(/(\n|\r\n)/g, '<br>')%></er>
+          <div class="card m-1 p-2 d-inline-flex flex-wrap" style="width: 230px;">
+            <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="https://images.evetech.net/types/<%= RoleGroup.Fits[i].Ship_ID%>/render?size=512" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"></img>
+            <p class="card-text h5 mb-0"><%= RoleGroup.Fits[i].Name%></p>
+            <p class="card-text m-0 mb-2"><%= RoleGroup.Fits[i].ShipName%></p>
+            <p class="card-text h6 m-0 mb-2"><%for(tag of RoleGroup.Fits[i].Tags){%>
+              <span class="badge badge-primary"><%=tag.Name%></span>
+            <%}%></p>
+            <div class="btn-group">
+              <!-- <a href="/fitdetail/<%=RoleGroup.Fits[i].fit_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button></a> -->
+              <a onclick="copyToClipboard('er#fitBody_<%=RoleGroup.Role_ID%>_<%=i%>')"> <button type="button" class="btn btn-sm btn-outline-secondary">Copy</button></a>
+              <%if(sess.data.isAdmin==true){%>
+              <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/doctrine/unlink/<%=doctrine.Doctrine_ID%>/<%=RoleGroup.Fits[i].fit_ID%>/<%=RoleGroup.Role_ID%>','이 피팅을 제외하시겟습니까?')">Unlink</button>
+              <%}%>
+            </div>
+          </div>
+        <%}%> 
+          </div>  
+        </div>
+      </div>
+    <% } %> 
+
+</div>
+
+<script>
+  function copyToClipboard(element) {
+      var $temp = $("<textarea>");
+      var brRegex = /<br\s*[\/]?>/gi;
+      $("body").append($temp);
+      $temp.val($(element).html().replace(brRegex, "\r\n")).select();
+      document.execCommand("copy");
+      $temp.remove();
+  }
+  function href_confirm(url,message){
+    if (confirm(message)) {
+      location.href=url;
+    } else {
+    }
+  }
+</script>

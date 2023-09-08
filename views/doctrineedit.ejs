@@ -1,0 +1,25 @@
+<form id = "doctrine_form" action="/doctrine/editDoctrine/<%=Doctrine_ID%>" method="POST">
+
+  <div class="form-group">
+    <label for="inputAddress">Name</label>
+    <input type="text" class="form-control" name = "Name" id="inputAddress" placeholder="독트린 이름" value="<%= doctrine.Name %>">
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">SubTitle</label>
+    <input type="text" class="form-control" name = "SubTitle" id="inputAddress2" placeholder="부제목" value="<%= doctrine.SubTitle %>">
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">Cover Image</label>
+    <input type="text" class="form-control" name = "CoverImage" id="inputAddress2" placeholder="커버 이미지" value="<%= doctrine.CoverImg %>">
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">Description</label>
+    <textarea class="form-control is-invalid" name = "Description" id="validationTextarea" placeholder="상세설명"><%= doctrine.Desc %></textarea>
+  </div>
+
+  <div id="list_Fits"></div><br>
+  <button id="btn_submit"class="btn btn-primary">Submit</button>
+</form>

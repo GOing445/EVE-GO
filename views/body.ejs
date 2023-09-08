@@ -1,0 +1,148 @@
+
+<% if(user){ %>
+    <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">DashBoard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+            <button class="btn btn-sm btn-outline-secondary">Share</button>
+            <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            This week
+            </button>
+        </div>
+    </div> -->
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+        <h1 class="h4 mb-0"><i class="fab fa-discord"></i> Discord</h1>
+    </div>
+    <div class="card m-1" style="width: 100%;">
+        <div class="d-inline-flex flex-wrap p-2">
+            <img class="card-img py-0" style="width: 10rem;height: 10rem;" src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.discord.user.avatar %>?size=1024" alt="Card image cap" onerror="this.src='/image/wtf128.png'">
+            <div class="card-body py-0">
+                <h5 class="card-title">
+                    <span class="text-body"><%= user.name %></span>
+                    <%if(user.isAdmin){%>
+                    <span class="badge badge-primary">Admin</span>
+                    <%}%>
+                </h5>
+                <p class="card-text h6">
+                    <%= user.discord.user.username%><br>
+
+                </p>
+            </div>
+        </div>
+        
+    </div> 
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+        <h1 class="h4 mb-0"><i class="fas fa-dollar-sign"></i> WalletBalance</h1>
+    </div>
+    <p id="data_totalwallet" class="h3">로딩 ISK</p>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+        <h1 class="h4 mb-0"><i class="fas fa-users"></i> Characters</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a class="btn btn-sm btn-primary mr-2" href="https://login.eveonline.com/oauth/authorize?response_type=code&redirect_uri=<%=hosturl%>/addchar&client_id=c34493dcaa2e49f28ca8900f6fb21791&scope=publicData%20esi-location.read_location.v1%20esi-location.read_ship_type.v1%20esi-mail.organize_mail.v1%20esi-mail.read_mail.v1%20esi-skills.read_skills.v1%20esi-skills.read_skillqueue.v1%20esi-wallet.read_character_wallet.v1%20esi-wallet.read_corporation_wallet.v1%20esi-clones.read_clones.v1%20esi-characters.read_contacts.v1%20esi-killmails.read_killmails.v1%20esi-assets.read_assets.v1%20esi-planets.manage_planets.v1%20esi-fleets.read_fleet.v1%20esi-characters.read_chat_channels.v1%20esi-characters.read_medals.v1%20esi-industry.read_character_jobs.v1%20esi-characters.read_corporation_roles.v1%20esi-location.read_online.v1%20esi-contracts.read_character_contracts.v1%20esi-clones.read_implants.v1%20esi-characters.read_fatigue.v1%20esi-killmails.read_corporation_killmails.v1%20esi-wallet.read_corporation_wallets.v1%20esi-characters.read_notifications.v1%20esi-corporations.read_contacts.v1%20esi-assets.read_corporation_assets.v1%20esi-contracts.read_corporation_contracts.v1%20esi-corporations.read_starbases.v1%20esi-industry.read_corporation_jobs.v1%20esi-industry.read_character_mining.v1%20esi-industry.read_corporation_mining.v1%20esi-planets.read_customs_offices.v1%20esi-alliances.read_contacts.v1%20esi-characterstats.read.v1" ><i class="fas fa-user-plus"></i> AddCharacter</a>
+            <button id="refresh" class="btn btn-sm btn-primary"><i class="fas fa-sync-alt"></i> refresh</button>
+        </div>
+    </div>
+    <div class="eve_profile d-inline-flex flex-wrap">
+        <% for(char of eve_char.array()){ %>
+            <div class="card m-1 p-2 d-inline-flex flex-wrap" style="width: 27rem;">
+                <div class="d-inline-flex flex-wrap">
+                    <img class="eve_portrait card-img-top mx-auto" style="width: 11rem;height: 11rem;" src="https://image.eveonline.com/Character/<%= char.id %>_128.jpg" alt="로딩">
+                    <div class="card-body py-0 pr-0" style="max-width: 50%">
+                        <h5 class="card-title">
+                                <span id="data_name<%=char.id%>" class="text-body" style="text-overflow : ellipsis;overflow:hidden;white-space:nowrap; "><%=char.name%><br></span>
+                                <span id="data_corpname<%=char.id%>" class="text-body h6 ml-2" style="text-overflow : ellipsis;overflow:hidden;white-space:nowrap; ">로딩<br></span>
+                                <span id="data_alliname<%=char.id%>" class="text-body h6 ml-2" style="text-overflow : ellipsis;overflow:hidden;white-space:nowrap; ">로딩<br></span>
+                        </h5>
+                        <p class="card-text pr-0">
+                            <p id="data_wallet<%=char.id%>" class="m-0 h6 font-weight-normal">로딩 ISK</p>
+                            <p id="data_sp<%=char.id%>"class="m-0 h6 font-weight-normal mb-1">로딩 SP</p>
+                            <%if(true){%>
+                            <p id="data_tainskill<%=char.id%>"class="m-0 h6 font-weight-normal" style="text-overflow : ellipsis;overflow:hidden;white-space:nowrap; ">로딩</p>
+                            <p id="data_remaining_date<%=char.id%>"class="m-0 font-weight-light">로딩</p>
+                            <%}%>
+                        </p>
+                    </div>
+               </div>
+                <a class="btn btn-primary btn-block mt-2" href="/memberdetail/<%=char.id%>/"><i class="fas fa-info-circle"></i> More Info</a>
+            </div>
+        <% } %>
+    </div>  
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    let soketSecret = '<%=soketSecret%>';
+    $(document).ready(function(){
+        // socket.io 서버에 접속한다
+        var socket = io();
+        
+        var totalwallet = 0;
+        
+        function secToDate(sec) {
+            var days = Math.floor(sec / 86400);
+            var hours   = Math.floor((sec - (days * 86400)) / 3600);
+            var minutes = Math.floor((sec - (days * 86400) - (hours * 3600)) / 60);
+            var seconds = Math.floor(sec - (days * 86400) - (hours * 3600) - (minutes * 60));
+            
+            // console.log(days,hours,minutes,seconds);
+            if(isNaN(days)||isNaN(hours)||isNaN(minutes)||isNaN(minutes)) return 'SkillQueue Paused';
+
+            if(days!=0)return days+"d"+hours+'h'+minutes+'m'+seconds+'s';
+            else if(hours!=0)return hours+'h'+minutes+'m'+seconds+'s';
+            else if(minutes!=0)return minutes+'m'+seconds+'s';
+            else return seconds+'s';
+        }
+
+        var countdown = function(sec,contain){
+            var interval = setInterval(function(){
+                if(sec<=0) clearInterval();
+                sec-=1;
+                $(contain).html(secToDate(sec));
+            },1000);
+        }
+        
+        $("#refresh").click(function(){
+            console.log("refresh!!");
+            // 서버로 메시지를 전송한다.
+            socket.emit("refresh");
+        });
+      // 서버로부터의 메시지가 수신되면
+        socket.on(soketSecret, function(data) {
+            console.log(data);
+            if(data.type == "public"){
+                $(`#data_name${data.char_id}`).html(data.data.name+'<br>');
+            }
+            else if(data.type == "corp"){
+                $(`#data_corpname${data.char_id}`).html(data.data.name+'<br>');
+                if(data.data.alliance_id == undefined) $(`#data_alliname${data.char_id}`).html('<br>');
+            }
+            else if(data.type == "alli"){
+                $(`#data_alliname${data.char_id}`).html(data.data.name+'<br>');
+            }
+            else if(data.type == "wallet"){
+                if(!isNaN(data.data)) totalwallet += data.data;
+                $(`#data_totalwallet`).html(Math.floor(totalwallet).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" ISK");
+                $(`#data_wallet${data.char_id}`).html(Math.floor(data.data).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" ISK");
+            }
+            else if(data.type == "total_sp"){
+                $(`#data_sp${data.char_id}`).html(Math.floor(data.data).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" SP");
+            }
+            else if(data.type == "skillQueue"){
+                if(data.data.length == 0){
+                    $(`#data_tainskill${data.char_id}`).html('');
+                    $(`#data_remaining_date${data.char_id}`).html('');
+                }
+                else{        
+                    $(`#data_tainskill${data.char_id}`).html(data.data[0].skill_name);
+                    $(`#data_remaining_date${data.char_id}`).html(secToDate(data.data[0].remaining_date));
+                    countdown(data.data[0].remaining_date,`#data_remaining_date${data.char_id}`);
+                }
+            }
+        });
+    });
+    </script>
+<% }else{ %>
+    <h2> Please Login. </h2>
+<% } %>

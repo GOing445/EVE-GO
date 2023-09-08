@@ -1,0 +1,28 @@
+<form action="/fits/edit/<%=fit_origin.fit_ID%>" method="POST">
+  <br>
+  <table>
+      <tr>
+        <td>FitName</td>
+        <td><input type="text" name = "fit_name" value="<%=fit_origin.fit_name%>"></td>
+      </tr>
+      <tr>
+          <td>Fit</td>
+          <td><textarea name="fit_esi" cols="40" rows="16" ><%=fit_origin.fit_esi%></textarea></td>
+      </tr>
+      </tr>
+      <tr>
+          <td>Description</td>
+          <td><input type="text" name = "fit_dec" value="<%=fit_origin.fit_dec%>"></td>
+      </tr>
+      <tr>
+          <td>Tags</td>
+          <td>
+          <% for(tag of tags){ %>
+          <ul><input type='checkbox' name='select_tags' value='<%-tag.Tag_ID%>' <%if(select_tag[tag.Tag_ID]){%>checked<%}%>/><%-tag.Name%></ul>
+          <% } %>
+          </td>
+      </tr>
+  </table>
+  <br>
+  <button type="submit" id="sub">submit</button>
+</form>

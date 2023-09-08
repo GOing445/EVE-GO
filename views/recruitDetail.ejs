@@ -1,0 +1,147 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title><%=recruit.Title%></title>
+    <style>
+      #body h1{
+        font-size: 26px ;
+      }
+      #body h2{
+        font-size: 19.5px ;
+      }
+      #body h3{
+        font-size: 15.21px ;
+      }
+      #body p{
+        font-size: 13px ;
+      }
+    </style>
+  </head>
+  <body>    
+    <div  class="container my-5">
+      <a href="/recruitList">목록보기</a>
+      <%if(sess.data.isAdmin==true){%>
+        <br>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/delrecruit/<%=recruit.Author%>','이 리크룻을 삭제하겟습니까?')">삭제</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/setrecruit/<%=recruit.Author%>/101','이 리크룻의 상태를 진행중으로 변경하겟습니까?')">진행중</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/setrecruit/<%=recruit.Author%>/202','이 리크룻의 상태를 승낙됨으로 변경하겟습니까?')">승낙됨</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/setrecruit/<%=recruit.Author%>/303','이 리크룻의 상태를 보류됨으로 변경하겟습니까?')">보류됨</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/setrecruit/<%=recruit.Author%>/404','이 리크룻의 상태를 거부됨으로 변경하겟습니까?')">거부됨</button>
+        </div>
+        
+        <%}%>
+      <h1><%=recruit.Title%></h1>
+      
+      <% recruit.CreateData = new Date(recruit.CreateData - (-540 * 60 * 1000)); %>
+      <p><%=`${recruit.CreateData.getFullYear()}/${recruit.CreateData.getMonth()}/${recruit.CreateData.getDate()} ${recruit.CreateData.getHours()}:${recruit.CreateData.getMinutes()}`%>
+        <% if (recruit.State == 101) { %>
+          <span class="badge badge-primary">진행중</span>
+        <% } else if (recruit.State == 202) { %> 
+        <span class="badge badge-success">승낙됨</span>
+        <% } else if (recruit.State == 303) { %>
+        <span class="badge badge-secondary">보류됨</span>
+        <% } else if (recruit.State == 404) { %>
+        <span class="badge badge-danger">거부됨</span>
+        <% } %>
+      </P>
+      <br>
+      <div id="body" style="line-height: 100%;">
+        <%-recruit.Body%>
+      </div>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Comment</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% comments.forEach(comment => { %>
+            <tr class="comment" data="<%= comment.RecruitComment_ID %>">
+              <% comment.CreateData = new Date(comment.CreateData - (-540 * 60 * 1000)); %>
+              <th scope="row"><%= comment.username %></th>
+              <td><%= comment.Body %></td>
+              <td><%=`${comment.CreateData.getFullYear()}/${comment.CreateData.getMonth()+1}/${comment.CreateData.getDate()} ${comment.CreateData.getHours()}:${comment.CreateData.getMinutes()}`%></td>
+              <% if (comment.Author==sess.id || sess.data.isAdmin==true) { %>
+                <td><button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/delcomment/<%=recruit.Author%>/<%=comment.RecruitComment_ID%>','이 댓글을 삭제하겟습니까?')">삭제</button></td>
+              <% } %>
+            </tr>
+            <% comment.subcomment.forEach(subcomment => { %>
+              <tr class="subcomment" data="<%= subcomment.RecruitComment_ID %>">
+                <% subcomment.CreateData = new Date(subcomment.CreateData - (-540 * 60 * 1000)); %>
+                <th scope="row">┗ <%= subcomment.username %></th>
+                <td><%= subcomment.Body %></td>
+                <td><%=`${subcomment.CreateData.getFullYear()}/${subcomment.CreateData.getMonth()}/${subcomment.CreateData.getDate()} ${subcomment.CreateData.getHours()}:${subcomment.CreateData.getMinutes()}`%></td>
+                <% if (subcomment.Author==sess.id || sess.data.isAdmin==true) { %>
+                  <td><button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/delcomment/<%=recruit.Author%>/<%=subcomment.RecruitComment_ID%>','이 댓글을 삭제하겟습니까?')">삭제</button></td>
+                <% } %>
+              </tr>
+            <% }) %>
+          <% }) %> 
+          <tr>
+            <form action="/addRecruitComment/<%= recruit.Author %> " method="POST">
+              <th scope="row"><%=sess.username%></th>
+              <td><input type="text" class="form-control" name = "Body" placeholder="" ></td>
+              <td><input type="submit" class="btn btn-primary"></td>
+          </form>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    
+    <script>
+      let username = "<%= sess.username %>";
+      $(document).ready(function(){
+        $(".comment").click(function(){
+          if(!!$(this).attr("class").split(' ').find(cls => cls == 'WRITING')) return;
+          $(this).attr("class",$(this).attr("class")+" WRITING");
+          let commenter = $(this);
+          commenter.attr("class")
+          while(true){
+            if(!commenter.next()) break;
+            if(!commenter.next().attr("class")) break;
+            if(commenter.next().attr("class").split(' ').find(cls => cls == 'subcomment')){
+              commenter = commenter.next();
+            }
+            else break;
+          }
+          commenter.after(`<tr class="input_subcomment">
+            <th scope="row">┗ ${username}</th>
+            
+              <td><form action="/addSubComment/<%= recruit.Author %>/${$(this).attr("data")}" method="POST"><input type="text" class="form-control" name = "Body" placeholder="" ></form></td>
+              <td><input type="submit" class="btn btn-primary"></td>
+            
+            </tr>
+          `).next().on('click', `input[type="submit"]`, function() {
+            $(this).parent().prev().children().submit()
+          });
+        });
+      });
+    </script>
+    <script>
+      function href_confirm(url,message){
+        if (confirm(message)) {
+          location.href=url;
+        } else {
+        }
+      }
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

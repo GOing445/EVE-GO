@@ -1,0 +1,126 @@
+<form id = "doctrine_form" action="/doctrine/add" method="POST">
+  <div class="form-group">
+    <label for="inputAddress">Name</label>
+    <input type="text" class="form-control" name = "Name" id="inputAddress" placeholder="독트린 이름" >
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">SubTitle</label>
+    <input type="text" class="form-control" name = "SubTitle" id="inputAddress2" placeholder="부제목" >
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">Cover Image</label>
+    <input type="text" class="form-control" name = "CoverImage" id="inputAddress2" placeholder="커버 이미지" >
+  </div>
+
+  <div class="form-group">
+    <label for="inputAddress2">Description</label>
+    <textarea class="form-control is-invalid" name = "Description" id="validationTextarea" placeholder="상세설명" ></textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label for="inputCity">Role Name</label>
+      <input type="text" class="form-control" id="role_name">
+    </div>
+    <div class="form-group col-md-7">
+      <label for="inputState">Role Description</label>
+      <input type="text" class="form-control" id="role_desc">
+    </div>
+    <div class="form-group col-md-2">
+      <label for="inputState">&nbsp;</label><br>
+      <button id="btn_AddRoleGroup" type="button" class="btn btn-sm btn-primary">Add RoleGroup</button>
+    </div>
+    <div id="list_RoleGroups" class="form-group col-md-10">
+      <label for="inputState">RoleGroups - Click to remove</label><br>
+      <button type="button" class="my-1 btn btn-primary" value="Other">Other</button>
+    </div>
+  </div>
+  <h3>Fits</h3>
+  <button id = "btn_addFit"type="button" class="btn btn-sm btn-primary">Add Fit</button>
+  
+  <div id="list_Fits"></div><br>
+  <button id="btn_submit"class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+  $(document).ready(function(){
+    $('.js-example-basic-single').select2();
+    let roleGroup = [{
+      name : "Other",
+      desc : ""
+    }];
+    let rolebtncount = 0;
+    $("#btn_AddRoleGroup").click(function(){
+      let name = $("#role_name").val();
+      let desc = $("#role_desc").val();
+      if(name!=""){
+        $("#list_RoleGroups").append(`<button type="button" class="my-1 role_button_${rolebtncount} btn btn-primary" value="${name}">${name}</button>\n`).on('click', `.role_button_${rolebtncount}`, function() {
+          roleGroup.splice(roleGroup.findIndex(role=>role.name==name),1);
+          $(`.opt_role_${name}`).remove();
+          $(this).remove();
+        });
+        $(".opt_RoleGroup").append(`<option class="opt_role opt_role_${name}">${name}</option>\n`);
+        rolebtncount++;
+        roleGroup.push({
+          name : name,
+          desc : desc
+        })
+      }
+      $("#role_name").val("");
+      $("#role_desc").val("");
+    });
+    $("#btn_addFit").click(function(){
+      let option = "";
+      for(role of roleGroup){
+        option+=`<option class="opt_role opt_role_${role.name}">${role.name}</option>\n`
+      }
+      $("#list_Fits").append(`
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputCity">Fit ID</label>
+          <select class="form-control opt_fitNames" name = "fitNames">
+            <%for(fit of fits){%>
+              <option value="<%=fit.fit_ID%>"><%=`${fit.fit_ID} ${fit.Name} (${fit.Ship_Name})`%></option>
+            <%}%>
+          </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputState">RoleGroup</label>
+          <select class="form-control opt_RoleGroup" name = "fitRoles">
+            ${option}
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputState">&nbsp;</label><br>
+          <button type="button" class="btn btn-sm btn-primary btn_fitRemove">Remove Fit</button>
+        </div>
+      </div>
+      `).on('click', `.btn_fitRemove`, function() {
+        console.log("ㄱㅇㄱㅇㄱㅇㄱㅇㄱㅇ");
+        $(this).parent().parent().remove();
+      });
+      $('.opt_RoleGroup').select2();
+      $('.opt_fitNames').select2();
+    });
+    $("#btn_submit").click(function(){
+      var theForm = document.forms['doctrine_form'];
+  
+      var input   = document.createElement('input');
+  
+  
+  
+      input.type   = 'hidden';
+  
+      input.name  = 'roleGroup';
+  
+      input.value  = JSON.stringify(roleGroup);
+  
+      theForm.appendChild(input);
+  
+  
+  
+      $('#doctrine_form').submit();
+    });
+  });
+</script>

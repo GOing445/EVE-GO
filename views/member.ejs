@@ -1,0 +1,86 @@
+<style>
+    .discord_profile {
+        text-align: center;
+        background-color: dimgrey;
+        padding: 5pt 5pt 5pt 5pt;
+        border-radius: 5pt;
+        margin-top: 3%;
+    }
+    .discord_img {
+        width: 100pt;
+        margin: 0pt 0pt 0pt 0pt;
+        border-radius: 5pt;
+    }
+    .discord_item {
+        display: inline-block;
+    }
+    .discord_ul {
+        list-style:none;
+        padding : 0pt 0pt 0pt 0pt;
+        margin: 16pt 16pt 16pt 16pt;
+        text-align: left;
+    }
+    .eve_profile {
+        text-align: center;
+        background-color: dimgrey;
+        padding: 5pt 5pt 5pt 5pt;
+        border-radius: 5pt;
+        margin-top: 3%;
+    }
+    .eve_profile_item {
+        display: inline-block;
+        border-radius: 5pt;
+        background-color: #34495e;
+        margin: 2pt;
+        text-align: center;
+    }
+    img{
+        border-radius: 5pt;
+    }
+    .img_center{
+        margin-top : 0pt;
+    }
+    .eve_portrait{
+        width: 100%;
+    }
+
+</style>
+<% if(sess){ %>
+    <%for(user of users){%>
+            <%if(user.discord){%>
+                <!-- <pre><%=JSON.stringify(user.discord.nickname,null,4)%></pre><br> -->
+                <a class="card m-1"  href="/member/<%= user.id %>/" style="width: 100%;">
+                    <div class="d-inline-flex flex-wrap p-2">
+                        <img class="card-img py-0" style="width: 5rem;height: 5rem;" src="https://cdn.discordapp.com/avatars/<%= user.discord.user.id %>/<%= user.discord.user.avatar%>?size=1024" alt="Card image cap"  onerror="this.src='/image/wtf128.png'">
+                        <div class="card-body py-0">
+                            <h5 class="card-title">
+                                <span class="text-body"><%= user.discord.nickname %></span>
+                                <span class="text-secondary h6"><%=user.discord.user.username%>#<%= user.discord.user.discriminator %></span><p style="font-size : 10px"><%= user.id%></p>
+                                <%if(user.admin){%>
+                                <span class="badge badge-primary">Admin</span>
+                                <%}%>
+                            </h5>
+                            <p class="card-text">
+                                새우 : <%= user.point %> <br>
+                                캐릭터수 : <%= user.eve_char.length %> <br>
+                            </p>
+                        </div>
+                        
+                        
+                    </div>
+                    <% if(user.eve_char.length!=0){ %>
+                    <div class="card-body d-flex">
+                        <%for(char of user.eve_char){ %>
+                            <div class = "">
+                                <img class="card-img" style="width: 5rem;height: 5rem;"  src="https://image.eveonline.com/Character/<%=char.id%>_128.jpg" alt="">
+                                <p class="text-body text-center" style="font-size: 10px;"><%=char.name%></p>
+                            </div>
+                        <%}%>
+                    </div>
+                    <%}%>
+                </a>
+            <%}%>
+        <%}%>
+        <% }else{ %>
+            <h2> 버그임 꼬잉부르셈 </h2>
+<% } %>

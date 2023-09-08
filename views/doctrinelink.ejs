@@ -1,0 +1,19 @@
+<form id = "doctrine_form" action="/doctrine/link/<%=Doctrine_ID%>/<%=Role_ID%>" method="POST">
+
+  <div class="form-group">
+    <label for="inputAddress">Fit ID</label>
+    <select class="form-control opt_fitNames" name = "Fit_ID">
+      <%for(fit of fits){%>
+        <option value="<%=fit.fit_ID%>"><%=`${fit.fit_ID} ${fit.Name} (${fit.Ship_Name})`%></option>
+      <%}%>
+    </select>
+  </div>
+  
+  <div id="list_Fits"></div><br>
+  <button id="btn_submit"class="btn btn-primary">Submit</button>
+</form>
+<script>
+  $(document).ready(function() {
+    $('.opt_fitNames').select2();
+  });
+</script>

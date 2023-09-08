@@ -1,0 +1,14 @@
+<form id = "doctrine_form" action="/doctrine/editRole/<%=Doctrine_ID%>/<%=Role_ID%>" method="POST">
+
+  <div class="form-group">
+    <label for="inputAddress">Role ID</label>
+    <input type="text" class="form-control" name = "Role_name"" id="inputAddress" placeholder="역활 이름" value="<%= role.Name %>" required>
+  </div>
+  <div class="form-group">
+    <label for="inputAddress">Role Description</label>
+    <input type="text" class="form-control" name = "Role_desc"" id="inputAddress" placeholder="역활 설명" value="<%= role.Desc %>" >
+  </div>
+
+  <div id="list_Fits"></div><br>
+  <button id="btn_submit"class="btn btn-primary">Submit</button>
+</form>

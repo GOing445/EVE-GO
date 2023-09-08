@@ -1,0 +1,28 @@
+<form action="/fits/add" method="POST">
+  <br>
+  <table>
+      <tr>
+        <td>FitName</td>
+        <td><input type="text" name = "fit_name"></td>
+      </tr>
+      <tr>
+          <td>Fit</td>
+          <td><textarea name="fit_esi" cols="40" rows="16" ></textarea></td>
+      </tr>
+      </tr>
+      <tr>
+          <td>Description</td>
+          <td><input type="text" name = "fit_dec"></td>
+      </tr>
+      <tr>
+          <td>Tags</td>
+          <td>
+          <% for(tag of tags){ %>
+          <ul><input type='checkbox' name='select_tags' value='<%-tag.Tag_ID%>'/><%-tag.Name%></ul>
+          <% } %>
+          </td>
+      </tr>
+  </table>
+  <br>
+  <button type="submit" id="sub">submit</button> <button type="reset" id="sub">reset</button>
+</form>

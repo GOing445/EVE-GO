@@ -1,0 +1,220 @@
+<html>
+
+<head>
+    <% include ./header.ejs %>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10;
+            color: white;
+        }
+
+        /* Style table headers and table data */
+        th, td {
+            text-align: center;
+            padding: 16px;
+
+        }
+
+        th:first-child, td:first-child {
+            text-align: left;
+        }
+
+        /* Zebra-striped table rows */
+        tr:nth-child(even) {
+            background-color: #112233;
+        }
+
+        .fa-check {
+            color: green;
+        }
+
+        .fa-remove {
+            color: red;
+        }
+        .contop{
+            margin: 0 auto;
+        }
+   </style>
+</head>
+
+<body onload="msg();">
+    <div class="contop">
+        <h1><%=fit.title%></h1>
+        <div class="row" style="padding: 0px;">
+            <div  style="display:none" style="bolder:1px solid red;">
+                <div>
+                    <er id="error-details"><%-fit.rawFit.replace(/(\n|\r\n)/g, '<br>')%></er>
+                </div>
+            </div>
+            <img src="https://images.evetech.net/types/<%=fit.ship.id%>/render?size=512" style="height: 200px; width: 200px;" class="eveimage img-rounded m-3" alt="Gila">
+            <div class="col">
+                <button id="FailCopy" type="button" onclick="copyToClipboard('er#error-details')"  class="my-1 tag_button btn btn-primary" >Copy to clipboard</button><br>
+                <% for(tag of tags){ %>
+                    <button id="tag_button" type="button" class="my-1 tag_button btn btn-primary" value="<%-tag.Tag_ID%>"><%-tag.Name%></button>
+                    <% } %>
+                <table class="table table-sm table-dark">
+                    <!-- <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                    </thead> -->
+                    <tbody>
+                        <tr>
+                            <th>FitName</th>
+                            <td><%=fit.title%></td>
+                        </tr>
+                        <tr>
+                            <th>Author</th>
+                            <td><%=fit.author%></td>
+                        </tr>
+                        <tr>
+                            <th>CreateDate</th>
+                            <td><%=fit.createDate%></td>
+                        </tr>
+                        <tr>
+                            <th>Comment</th>
+                            <td><%=fit.desc%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class=""style="bolder:1px solid red;">
+                <table class="table table-sm table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">High</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.highSlot){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th scope="col">Mid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.midSlot){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th scope="col">Low</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.lowSlot){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th scope="col">Rigs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.rigSlot){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <%if(fit.dogma.subsystem!=0){%>
+                    <thead>
+                        <tr>
+                            <th scope="col">SubSystem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.subsysSlot){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <%}%>
+                    <%if(fit.drone.lenth!=0){%>
+                    <thead>
+                        <tr>
+                            <th scope="col">Drone & Fighter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.drone){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <%}%>
+                    <%if(fit.cargo.lenth!=0){%>
+                    <thead>
+                        <tr>
+                            <th scope="col">Cargo & Ammo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(i of fit.cargo){%>
+                        <tr>
+                            <td scope="row"><img class="img-rounded" src="https://imageserver.eveonline.com/Type/<%=i.id%>_32.png"
+                                    style="height: 32px; width: 32px; background-color: #ffffff" alt="<%=i.name%>">
+                                <%=i.name%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <%}%>
+
+                        
+                </table>
+            </div>
+        
+    </div>
+    <script>
+        function copyToClipboard(element) {
+            var $temp = $("<textarea>");
+            var brRegex = /<br\s*[\/]?>/gi;
+            $("body").append($temp);
+            $temp.val($(element).html().replace(brRegex, "\r\n")).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+    </script>
+</body>
+
+</html>

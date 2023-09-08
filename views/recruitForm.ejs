@@ -1,0 +1,114 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <title>RecruitForm</title>
+  </head>
+  <body>  
+    <div  class="container my-5">
+
+      <h1>신청서</h1>
+      <a href="/logout"><button id="btn_logout"class="btn btn-primary" style="float: right;">Logout</button></a>
+      <div class="row">
+        <img class="rounded-circle" src="https://cdn.discordapp.com/avatars/<%= sess.id %>/<%= sess.avatar %>?size=1024" alt="discord_img" style="width: 5rem;height: 5rem;"  onerror="this.src='/image/wtf128.png'">
+        <div class="ml-2">
+          <h1 class="h5"><%= sess.username %></h1>
+          <h1 class="h6"><%= sess.username %>(#<%= sess.discriminator %>)</h1>
+        </div>
+      </div>
+      <br>
+      <form id = "recruit_form" action="/recruit" method="POST">
+        <div class="form-group">
+          <label for="inputAddress">MainCharNic</label>
+          <input type="text" class="form-control" name = "Name" placeholder="메인툰 닉네임" >
+        </div>
+      
+        <!-- Create the editor container -->
+        
+        <label for="inputAddress">Body</label>
+        <div id="editor">
+          <h1><strong>질문간 공백에 작성해주세요.</strong></h1>
+          <h3><strong>게시된 신청서는 수정이 어려우니 신중하게 작성해주세요.</strong></h3>
+          <p><br></p>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>1. 일반 정보</strong></P>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>a. 자신의 메인툰 닉네임과 플레이 하는 시간대를 적어주세요. 만약 AU 타임존 플레이어일 경우 확실하게 시간대를 적어주세요.</strong></P>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>b. 자신이 컴뱃에 사용하는 툰의 목록을 적어주시고, 사용 목적을 적어주세요. ex, Rhea Zail (메인, sub)</strong></P>
+          <p></p>메인툰 / 드레드넛 , FAX 알트의 경우는 스킬보드를 함께 첨부해서 적어주세요. <a href="https://eveskillboard.com/" target="_blank">https://eveskillboard.com/<a></p>
+          <p><br></p>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>2. 이브온라인 경험</strong></P>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>a. 지금 소속한 꼽을 떠나려는 이유나 게릴라 킨더가든에 가입하려는 이유를 적어주세요.</strong></P>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>b. 자신이 지금까지 PVP 를 해오면서 가장 인상 깊었던 자신의 킬 / 로스 메일을 하나 링크해주시고 이유를 적어주세요.</strong></P>
+          <p><br></p>
+          <p><br></p>
+          <P><strong>3. 자신을 vouch 해줄 인원이 있다면 닉네임을 적어주세요.</strong></P>
+          <p><br></p>
+        </div>
+
+        
+        <button id="btn_submit"class="btn btn-primary" style="float: right;">제출</button>
+      </form>
+    </div>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        var quill = new Quill('#editor', {
+          theme: 'snow'
+        });
+      </script>
+      <script>
+        $(document).ready(function(){
+                $("#btn_submit").click(function(){
+                    console.log("rd")    
+                    var theForm = document.forms['recruit_form'];
+                    
+                        var input   = document.createElement('input');
+                    
+                        input.type   = 'hidden';
+                    
+                        input.name  = 'Body';
+                    
+                        input.value  = $("#editor").children().html();
+                    
+                        theForm.appendChild(input);
+                    
+                    
+                    
+                        $('#recruit_form').submit();
+                      });    
+        });
+      </script>
+      <script>
+        function href_confirm(url,message){
+          if (confirm(message)) {
+            location.href=url;
+          } else {
+          }
+        }
+      </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

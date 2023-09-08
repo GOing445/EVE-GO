@@ -1,0 +1,104 @@
+<h1>피팅 목록</h1>
+<% for(tag of tags){ %>
+    <button id="tag_button" type="button" class="my-1 tag_button btn btn-primary" value="<%-tag.Tag_ID%>"><%-tag.Name%></button>
+    <% } %>
+    <br>
+    <button type="button" class="search_button btn btn-success">Search</button>
+    
+<%if(sess){if(sess.data){if(sess.data.isAdmin==true){%><a href="/fits/add/">새로 만들기</a><%}}}%>
+<br><%=fits.length%>개의 결과
+<div class="album py-2 bg-light">
+  <div class="container">
+    <div class="d-inline-flex flex-wrap">
+      <% for(var i=0; i<length; i++){ %>
+        <er id="fitBody_<%=i%>" style="display:none"><%-fits[i].Body.replace(/(\n|\r\n)/g, '<br>')%></er>
+      <div class="card m-1 p-2 d-inline-flex flex-wrap" style="width: 230px;">
+        <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="https://images.evetech.net/types/<%= fits[i].Ship_ID%>/render?size=512" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"></img>
+        <p class="card-text h5 mb-0"><%= fits[i].Name%></p>
+        <p class="card-text m-0 mb-2"><%= fits[i].ShipName%></p>
+        <p class="card-text h6 m-0 mb-2"><%for(tag of fits[i].Tags){%>
+          <span class="badge badge-primary"><%=tag.Name%></span>
+        <%}%></p>
+        <div class="btn-group">
+          <!-- <a href="/fitdetail/<%=fits[i].fit_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button></a> -->
+          <a onclick="copyToClipboard('er#fitBody_<%=i%>')"> <button type="button" class="btn btn-sm btn-outline-secondary">Copy</button></a>
+          <%if(sess){if(sess.data){if(sess.data.isAdmin==true){%>
+          <a href="/fits/edit/<%=fits[i].fit_ID%>"> <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="href_confirm('/fits/del/<%=fits[i].fit_ID%>','이 피팅을 삭제하시겟습니까?>?')">Delete</button>
+          <%}}}%>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+    var tags = JSON.parse(`<%-JSON.stringify(tags)%>`);
+    var select_tags = {};
+    for(tag of tags){
+        select_tags[tag.Tag_ID] = false;
+    }
+    
+
+    
+    $(document).ready(function(){
+        <%if(select_tags){%>
+            let pre_tags = JSON.parse(`<%-JSON.stringify(select_tags)%>`);
+            for(tag in pre_tags){
+                console.log(tag)
+                select_tags[tag]=pre_tags[tag];
+                if(pre_tags[tag])$(`button[value='${tag}']`).attr("class", "my-1 tag_button btn btn-secondary");
+            }
+        <%}%>
+        $(".tag_button").click(function(){
+            if($(this).attr("class")=="my-1 tag_button btn btn-primary"){
+                $(this).attr("class", "my-1 tag_button btn btn-secondary");
+                select_tags[$(this).val()]=true;
+            }
+            else {
+                $(this).attr("class", "my-1 tag_button btn btn-primary");
+                select_tags[$(this).val()]=false;
+            }
+        });
+        $(".search_button").click(function(){
+            console.log(select_tags);
+            var form = document.createElement("form");
+            var parm = new Array();
+            var input = new Array();
+
+            form.action = "/fits";
+            form.method = "post";
+
+
+            parm.push( ['select_tags', JSON.stringify(select_tags)] );
+
+
+            for (var i = 0; i < parm.length; i++) {
+                input[i] = document.createElement("input");
+                input[i].setAttribute("type", "hidden");
+                input[i].setAttribute('name', parm[i][0]);
+                input[i].setAttribute("value", parm[i][1]);
+                form.appendChild(input[i]);
+            }
+            document.body.appendChild(form);
+            form.submit();
+            });
+    });
+</script>
+<script>
+  function copyToClipboard(element) {
+      var $temp = $("<textarea>");
+      var brRegex = /<br\s*[\/]?>/gi;
+      $("body").append($temp);
+      $temp.val($(element).html().replace(brRegex, "\r\n")).select();
+      document.execCommand("copy");
+      $temp.remove();
+  }
+  function href_confirm(url,message){
+    if (confirm(message)) {
+      location.href=url;
+    } else {
+    }
+  }
+</script>
